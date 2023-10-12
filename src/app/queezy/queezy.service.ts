@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import {knex} from '../../../database/knex';
+import { PrismaDbConfigService } from 'src/prisma/prisma-db-config/prisma-db-config.service';
 
 @Injectable()
 export class QueezyService {
-   async getHelloWord(): Promise<string>{
-        return `HELLO WORLD`
-    }
+    constructor( private prismaDbConfigService: PrismaDbConfigService
+    ){}
+
 }

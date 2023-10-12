@@ -5,10 +5,13 @@ import { QueezyService } from './app/queezy/queezy.service';
 import { QueezyModule } from './app/queezy/queezy.module';
 
 const { Module } = require("@nestjs/common");
-console.log('chamou o modulooo')
+import { ConfigModule } from '@nestjs/config'
+import { PrismaModule } from "./prisma/prisma.module";
 @Module({
     imports: [
-        QueezyModule
+        QueezyModule,
+        PrismaModule,
+        ConfigModule.forRoot(),
     ],
     controllers: [
         AppController,
