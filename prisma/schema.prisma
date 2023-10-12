@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Questions {
+  id_question Int @id  @default(autoincrement()) 
+  question String @db.VarChar(255)
+  
+  question_answers Question_answers[]
+}
+
+model Question_answers {
+  id_question_answers Int @id @default(autoincrement())
+  question_id Int 
+  answer_id Int
+  position String @db.VarChar(15)
+
+  question Questions @relation(fields: [question_id], references: [id_question])
+  answers Answers @relation(fields: [answer_id], references: [id_answer])
+}
+
+
+model Answers {
+  id_answer Int @id @default(autoincrement())
+  answers String @db.VarChar(15)
+
+  question_answers Question_answers[]
+}
+
+model Users {
+  id_user Int @id @default(autoincrement())
+  name String @db.VarChar(50)
+  permission_id Int @unique
+
+  permissions Permissions[]
+  games Games[]
+}
+
+model Permissions {
+  id_permission Int @id @default(autoincrement())
+  name String @db.VarChar(50)
+
+  users Users @relation(fields: [id_permission], references: [permission_id])
+}
+
+model Games {
+  id_game Int @id @default(autoincrement())
+  name String @db.VarChar(50)
+  url String @db.VarChar(255)
+  user_id Int @unique
+  restartOnError Boolean? 
+
+  users Users @relation(fields: [user_id], references: [id_user])
+}

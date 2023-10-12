@@ -1,17 +1,23 @@
 import {NestFactory} from '@nestjs/core'
 import { AppModule } from './app.module';
-const  port = 4000 
+const  port = process.env.SERVERPORT 
 const date = new Date().toLocaleString()
 
 
 
 
 async function bootstrap() {
-const app = await NestFactory.create(AppModule, {abortOnError: false})
+const app = await NestFactory.create(AppModule, {
+    abortOnError: false, 
+    cors: {
+        origin: 'http://localhost:4200',
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
+    }
+})
 await app.listen(port)
 return {
-    Porta: console.log(`Servidor rodando na porta ${port}`),
-    Data: console.log(`Data:${date}`)
+    Port: console.log(`Server running on the port ${port}`),
+    Date: console.log(`Date: ${date}`)
 
     
 }
