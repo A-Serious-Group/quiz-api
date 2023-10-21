@@ -7,8 +7,11 @@ export class QueezyController {
     @Get() 
     findAll() {}
 
-    @Post()
-    create(@Body() dados: any) {}
+    @Post('/api/create-question/queezy')
+    create(@Body() dados: any) {
+        console.log( dados.question)
+        this.queezyService.createQuestion(dados)
+    }
 
     @Get(':id')
     findOne(@Param('id') id: number){}
