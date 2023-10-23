@@ -32,6 +32,8 @@ model Users {
   id_user       Int          @id @default(autoincrement())
   name          String       @db.VarChar(50)
   permission_id Int          @unique
+  email         String       @db.VarChar(50)
+  password      String       @db.VarChar(255)
   games         Games?
   permissions   Permissions?
 }

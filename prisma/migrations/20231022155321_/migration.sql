@@ -29,6 +29,8 @@ CREATE TABLE "Users" (
     "id_user" SERIAL NOT NULL,
     "name" VARCHAR(50) NOT NULL,
     "permission_id" INTEGER NOT NULL,
+    "email" VARCHAR(50) NOT NULL,
+    "password" VARCHAR(50) NOT NULL,
 
     CONSTRAINT "Users_pkey" PRIMARY KEY ("id_user")
 );
@@ -59,10 +61,10 @@ CREATE UNIQUE INDEX "Users_permission_id_key" ON "Users"("permission_id");
 CREATE UNIQUE INDEX "Games_user_id_key" ON "Games"("user_id");
 
 -- AddForeignKey
-ALTER TABLE "Question_answers" ADD CONSTRAINT "Question_answers_question_id_fkey" FOREIGN KEY ("question_id") REFERENCES "Questions"("id_question") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Question_answers" ADD CONSTRAINT "Question_answers_answer_id_fkey" FOREIGN KEY ("answer_id") REFERENCES "Answers"("id_answer") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Question_answers" ADD CONSTRAINT "Question_answers_answer_id_fkey" FOREIGN KEY ("answer_id") REFERENCES "Answers"("id_answer") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Question_answers" ADD CONSTRAINT "Question_answers_question_id_fkey" FOREIGN KEY ("question_id") REFERENCES "Questions"("id_question") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Permissions" ADD CONSTRAINT "Permissions_id_permission_fkey" FOREIGN KEY ("id_permission") REFERENCES "Users"("permission_id") ON DELETE RESTRICT ON UPDATE CASCADE;
