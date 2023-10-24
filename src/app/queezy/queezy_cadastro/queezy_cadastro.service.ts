@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateQueezyCadastroDto } from './dto/create-queezy_cadastro.dto';
 import { PrismaDbConfigService } from '../../../prisma/prisma-db-config/prisma-db-config.service';
-import * as bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcrypt';
 
 
 @Injectable()

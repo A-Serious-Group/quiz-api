@@ -29,19 +29,20 @@ model Answers {
 }
 
 model Users {
-  id_user       Int          @id @default(autoincrement())
-  name          String       @db.VarChar(50)
-  permission_id Int          @unique
-  email         String       @db.VarChar(50)
-  password      String       @db.VarChar(255)
+  id_user       Int         @id @default(autoincrement())
+  name          String      @db.VarChar(50)
+  permission_id Int         @unique
+  email         String      @db.VarChar(50)
+  password      String      @db.VarChar(255)
+  access_token  String?
   games         Games?
-  permissions   Permissions?
+  Permissions   Permissions @relation(fields: [permission_id], references: [id_permission])
 }
 
 model Permissions {
   id_permission Int    @id @default(autoincrement())
   name          String @db.VarChar(50)
-  users         Users  @relation(fields: [id_permission], references: [permission_id])
+  Users         Users?
 }
 
 model Games {
