@@ -7,11 +7,13 @@ import { QueezyModule } from './app/queezy/queezy.module';
 const { Module } = require("@nestjs/common");
 import { ConfigModule } from '@nestjs/config'
 import { PrismaModule } from "./prisma/prisma.module";
+import { AuthModule } from './app/auth/auth.module';
 @Module({
     imports: [
         QueezyModule,
         PrismaModule,
         ConfigModule.forRoot(),
+        AuthModule,
     ],
     controllers: [
         AppController,
