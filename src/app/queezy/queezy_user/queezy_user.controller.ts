@@ -7,10 +7,10 @@ import { ResponseApiUser } from './entities/queezy_user.entity';
 @Controller('queezy')
 export class QueezyUserController {
   constructor(private readonly queezyUserService: QueezyUserService) {}
-  @Post('/api/queezy/user')
-  create(@Body() createQueezyUserDto: CreateQueezyUserDto): Promise<ResponseApiUser | object> {
-    return this.queezyUserService.create(createQueezyUserDto);
-  }
+  // @Post('/api/queezy/user')
+  // create(@Body() createQueezyUserDto: CreateQueezyUserDto): Promise<ResponseApiUser | object> {
+  //   return this.queezyUserService.create(createQueezyUserDto);
+  // }
 
   @Get()
   findAll() {

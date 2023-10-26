@@ -48,7 +48,7 @@ export class AuthService {
                   ...credentials,
                   access_token: userIsAuthentique.access_token
                 }
-              
+
             return  {mensagem: `Login realizado com sucesso, ${user.name} está logado`, user: user }
 
         }

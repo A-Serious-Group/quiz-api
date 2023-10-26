@@ -1,6 +1,7 @@
 import {NestFactory} from '@nestjs/core'
 import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common'
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 const  port = process.env.SERVERPORT 
 const date = new Date().toLocaleString()
 
@@ -15,6 +16,15 @@ const app = await NestFactory.create(AppModule, {
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
     },
 })
+const config = new DocumentBuilder()
+.setTitle('Queezy')
+.setDescription('Endpoints do QUEEZY ')
+.setVersion('1.0')
+// .addTag('Quezzy')
+.build()
+
+const document = SwaggerModule.createDocument(app, config)
+SwaggerModule.setup('api', app, document)
 await app.listen(port)
 return {
     
