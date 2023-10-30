@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateQueezyUserDto } from './dto/create-queezy_user.dto';
 import { UpdateQueezyUserDto } from './dto/update-queezy_user.dto';
 import { PrismaDbConfigService } from '../../../prisma/prisma-db-config/prisma-db-config.service';
@@ -7,12 +11,10 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class QueezyUserService {
-  constructor(
-    private prismaDbService: PrismaDbConfigService
-  ){}
+  constructor(private prismaDbService: PrismaDbConfigService) {}
   async create(dados: CreateQueezyUserDto) {
     // const jwt = new JwtService()
-    // const {email, password} = dados 
+    // const {email, password} = dados
     // const verifica = await   this.prismaDbService.users.findFirst(
     //   {select: {email: true , password: true , id_user: true, permission_id: true, name: true, Permissions: true},
     //   where: {email: email}
@@ -34,7 +36,7 @@ export class QueezyUserService {
     //     type_user: verifica.Permissions.name
     //   }
     //   const access_token =  jwt.sign(credentials, {secret: process.env.SECRET_KEY_JWT, expiresIn: "1d"})
-      
+
     //   const userIsAuthentique = await this.prismaDbService.users.update(
     //     {
     //       data: {access_token: access_token},
@@ -46,21 +48,42 @@ export class QueezyUserService {
     //       ...credentials,
     //       access_token: userIsAuthentique.access_token
     //     }
-      
+
     // return  {mensagem: `Login realizado com sucesso, ${user.name} está logado`, user: user }
-    return
+    return;
   }
 
-  findAll() {
-    return `This action returns all queezyUser`;
+  async findAll() {
+    try {
+      let usuarios: CreateQueezyUserDto[] = [];
+      const users = await this.prismaDbService.users.findMany();
+      if (!users.length)
+        throw new NotFoundException({
+          mensagem: 'Não foi encontrado nenhum registro',
+        });
+      for (let user of users) {
+        usuarios.push(user);
+      }
+      return { mensagem: 'Users listed with success', users: usuarios };
+    } catch (error) {
+      return error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} queezyUser`;
-  }
+  async findOne(id: number) {}
 
-  update(id: number, updateQueezyUserDto: UpdateQueezyUserDto) {
-    return `This action updates a #${id} queezyUser`;
+  async update(id: number, updateQueezyUserDto: UpdateQueezyUserDto) {
+    try {
+      const user = await this.prismaDbService.users.update({
+        data: updateQueezyUserDto,
+        where: { id_user: id },
+        select: {name: true , email: true, id_user: true }
+      });
+      return {mensagem: 'User update with success', user: user}
+    } catch (error) {
+      console.log(error)
+      return error;
+    }
   }
 
   remove(id: number) {

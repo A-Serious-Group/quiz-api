@@ -7,11 +7,30 @@ export class QueezyQuestionService {
   constructor(private prismaDbService: PrismaDbConfigService) {}
 
   async createQuestion(dados: Question) {
+    console.log(dados);
     const question = await this.prismaDbService.questions.create({
       data: {
         question: dados.question,
+        question_user_id: dados.question_id_user,
       },
     });
+    const selectQuestion = await this.prismaDbService.questions.findFirst({
+      where: { id_question: question.id_question },
+    });
+    console.log(selectQuestion, 'select question');
+
+    const answer = await this.prismaDbService.answers.create({
+      data: { answers: dados.answer },
+    });
+    console.log(answer, 'a pergunta criada');
+    await this.prismaDbService.question_answers.create({
+      data: {
+        question_id: selectQuestion.id_question,
+        answer_id: answer.id_answer,
+        position: dados.position,
+      },
+    });
+
     if (question) {
       return {
         status: 201,

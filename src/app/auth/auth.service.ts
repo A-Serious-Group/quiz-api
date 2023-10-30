@@ -16,7 +16,7 @@ export class AuthService {
         try {
             const {email, password} = dados 
             const verifica = await   this.prismaDbService.users.findFirst(
-              {select: {email: true , password: true , id_user: true, permission_id: true, name: true, Permissions: true},
+              {select: {email: true , password: true , id_user: true, permission_id: true, name: true, permissions: true},
               where: {email: email}
             }
             )
@@ -29,11 +29,11 @@ export class AuthService {
               }
         
               const credentials = {
-                email: verifica.email,
-                id_user: verifica.id_user,
-                permission_id: verifica.permission_id,
-                name: verifica.name,
-                type_user: verifica.Permissions.name
+                      email: verifica.email,
+                      id_user: verifica.id_user,
+                      permission_id: verifica.permission_id,
+                      name: verifica.name,
+                      type_user: verifica.permissions.name
               }
               const access_token =  this.jwt.sign(credentials, {secret: process.env.SECRET_KEY_JWT, expiresIn: "1d"})
               
