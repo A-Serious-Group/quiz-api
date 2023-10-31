@@ -1,7 +1,9 @@
 import { Controller, Post, Body, Res, Get, Put, Param, Delete } from '@nestjs/common';
 import { QueezyQuestionService } from './queezy_question.service';
 import { Question } from './dto/question.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Questions')
 @Controller('queezy')
 export class QueezyQuestionController {
   constructor(private readonly queezyQuestionService: QueezyQuestionService) {}

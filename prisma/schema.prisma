@@ -10,46 +10,57 @@ datasource db {
 model Questions {
   id_question      Int                @id @default(autoincrement())
   question         String             @db.VarChar(255)
+  question_user_id Int
   question_answers Question_answers[]
+  users            Users              @relation(fields: [question_user_id], references: [id_user])
 }
 
 model Question_answers {
   id_question_answers Int       @id @default(autoincrement())
   question_id         Int
   answer_id           Int
-  position            String    @db.VarChar(15)
+  position            String    @db.VarChar(255)
   answers             Answers   @relation(fields: [answer_id], references: [id_answer])
   question            Questions @relation(fields: [question_id], references: [id_question])
 }
 
 model Answers {
   id_answer        Int                @id @default(autoincrement())
-  answers          String             @db.VarChar(15)
+  answers          String             @db.VarChar(255)
   question_answers Question_answers[]
 }
 
-model Users {
-  id_user       Int         @id @default(autoincrement())
-  name          String      @db.VarChar(50)
-  permission_id Int         @unique
-  email         String      @db.VarChar(50)
-  password      String      @db.VarChar(255)
-  access_token  String?
-  games         Games?
-  Permissions   Permissions @relation(fields: [permission_id], references: [id_permission])
+model Permissions {
+  id_permission Int     @id @default(autoincrement())
+  name          String  @db.VarChar(50)
+  Users         Users[]
 }
 
-model Permissions {
-  id_permission Int    @id @default(autoincrement())
-  name          String @db.VarChar(50)
-  Users         Users?
+model Users {
+  id_user           Int                     @id @default(autoincrement())
+  name              String                  @db.VarChar(50)
+  permission_id     Int
+  email             String                  @db.VarChar(50)
+  password          String                  @db.VarChar(255)
+  access_token      String?
+  games             Games[]
+  question          Questions[]
+  redefination_pass Redefination_password[]
+  permissions       Permissions             @relation(fields: [permission_id], references: [id_permission])
 }
 
 model Games {
   id_game        Int      @id @default(autoincrement())
   name           String   @db.VarChar(50)
   url            String   @db.VarChar(255)
-  user_id        Int      @unique
+  user_id        Int
   restartOnError Boolean?
   users          Users    @relation(fields: [user_id], references: [id_user])
+}
+
+model Redefination_password {
+  id_redefination_pass Int     @id @default(autoincrement())
+  codigo               String? @db.VarChar(10)
+  user_id              Int
+  users                Users   @relation(fields: [user_id], references: [id_user])
 }
