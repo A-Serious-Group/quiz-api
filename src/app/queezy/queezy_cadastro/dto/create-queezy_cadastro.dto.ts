@@ -14,4 +14,7 @@ export class CreateQueezyCadastroDto {
     @ApiProperty(
         {description: 'Envie o id da permissão mande apenas o id 1 ou o 2, o 1 vai ser ADM e o 2 USER, com isso validarei se o usuário é adm ou user'})
     permission_id: number
+
+    @ApiProperty({description: 'Nome do tipo de usuário, se é ADM ou USER'})
+    name_permission: string
 }
