@@ -1,6 +1,6 @@
 import {NestFactory} from '@nestjs/core'
 import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common'
+import { Logger, ValidationPipe } from '@nestjs/common'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 const  port = process.env.SERVERPORT 
 const date = new Date().toLocaleString()
@@ -25,6 +25,9 @@ const config = new DocumentBuilder()
 
 const document = SwaggerModule.createDocument(app, config)
 SwaggerModule.setup('api', app, document)
+
+app.useGlobalPipes(new ValidationPipe())
+
 await app.listen(port)
 return {
     
