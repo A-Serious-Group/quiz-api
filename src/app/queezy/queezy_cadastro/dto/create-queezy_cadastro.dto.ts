@@ -1,20 +1,22 @@
 import { ApiProperty } from "@nestjs/swagger"
 
 export class CreateQueezyCadastroDto {
-    @ApiProperty({description: 'O nome do usuário'})
+    
+    @ApiProperty({
+        description: 'O nome do usuário',
+        example: 'Luis Guilherme'})
     name: string
 
-    @ApiProperty({description: 'Email do usuário a ser cadastrado'})
+    @ApiProperty({description: 'Email do usuário a ser cadastrado',
+    example: 'gui_teste@hotmail.com'}
+    )
     email: string
 
     
     @ApiProperty({description: 'Senha do usuário a ser cadastrado'})
     password: string
 
-    @ApiProperty(
-        {description: 'Envie o id da permissão mande apenas o id 1 ou o 2, o 1 vai ser ADM e o 2 USER, com isso validarei se o usuário é adm ou user'})
-    permission_id: number
+    id_permission: number
 
-    @ApiProperty({description: 'Nome do tipo de usuário, se é ADM ou USER'})
     name_permission: string
 }
