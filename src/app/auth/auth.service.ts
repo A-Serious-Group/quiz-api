@@ -15,25 +15,25 @@ export class AuthService {
     async login(dados: AuthDto): Promise<any>{
         try {
             const {email, password} = dados 
-            const verifica = await   this.prismaDbService.users.findFirst(
+            const emailDoUsuario = await   this.prismaDbService.users.findFirst(
               {select: {email: true , password: true , id_user: true, permission_id: true, name: true, permissions: true},
               where: {email: email}
             }
             )
-            if(!verifica){
-                throw new UnauthorizedException()
+            if(!emailDoUsuario){
+                throw new UnauthorizedException({mensagem: 'Email informado não existe'})
                }
-              const authentique = await bcrypt.compare(password, verifica.password)
+              const authentique = await bcrypt.compare(password, emailDoUsuario.password)
               if(!authentique){
-                 throw new UnauthorizedException()
+                 throw new UnauthorizedException({mensagem: 'Email ou senha incorreta, verifique os dados e tente novamente'})
               }
         
               const credentials = {
-                      email: verifica.email,
-                      id_user: verifica.id_user,
-                      permission_id: verifica.permission_id,
-                      name: verifica.name,
-                      type_user: verifica.permissions.name
+                      email: emailDoUsuario.email,
+                      id_user: emailDoUsuario.id_user,
+                      permission_id: emailDoUsuario.permission_id,
+                      name: emailDoUsuario.name,
+                      type_user: emailDoUsuario.permissions.name
               }
               const access_token =  this.jwt.sign(credentials, {secret: process.env.SECRET_KEY_JWT, expiresIn: "1d"})
               
@@ -49,13 +49,11 @@ export class AuthService {
                   access_token: userIsAuthentique.access_token
                 }
 
-            return  {mensagem: `Login realizado com sucesso, ${user.name} está logado`, user: user }
+            return  {mensagem: `Login realizado com sucesso`, user: user }
 
         }
         catch(error){
             return error
         }
-
-        return 
     }
 }
