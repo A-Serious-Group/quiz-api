@@ -20,9 +20,8 @@ export class QueezyQuestionService {
     console.log(selectQuestion, 'select question');
 
     const answer = await this.prismaDbService.answers.create({
-      data: { answers: dados.answer },
+      data: { answers: dados.answer, question_id: selectQuestion.id_question , answers_correct: dados?.answers_correct },
     });
-    console.log(answer, 'a pergunta criada');
     await this.prismaDbService.question_answers.create({
       data: {
         question_id: selectQuestion.id_question,
