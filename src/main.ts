@@ -12,7 +12,7 @@ async function bootstrap() {
 const app = await NestFactory.create(AppModule, {
     abortOnError: false, 
     cors: {
-        origin: 'http://localhost:4200',
+        origin: process.env.LOCAL_HOST_APP,
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
     },
 })
