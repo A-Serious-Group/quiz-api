@@ -107,9 +107,14 @@ export class QueezyQuestionService {
     }
   };
 
-  async selectAllQuestion() {
-    const question = await this.prismaDbService.questions.findMany();
-    return { mensagem: 'Question listed with success', questions: question };
+  async selectAllQuestion(query: Question) {
+    const question = await this.prismaDbService.questions.findMany(
+      {
+        where: { question_user_id: query.id_user },
+        include: { answer_fk: true },
+      }
+    );
+    return { mensagem: 'Todas questões listadas com sucesso', questions: question };
   }
 
   async updateQuestion(id: number, dados: Question) {
@@ -155,5 +160,13 @@ export class QueezyQuestionService {
     // const imageRecord = await this.prismaDbService.questions.create({ path: imagePath });
 
     return; //imageRecord;
+  }
+
+  async getQuestionWithAnswers(questionId: number){
+    const question = await this.prismaDbService.questions.findUnique({
+      where: { id_question: questionId },
+      include: { answer_fk: true },
+    });
+    console.log(question, 'question')
   }
 }

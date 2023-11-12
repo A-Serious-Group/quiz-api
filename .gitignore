@@ -12,7 +12,6 @@
 #Testing Output folder
 .output/
 #Extension App-file
-*.app
 #Rapid Application Development File
 rad.json
 #Translation Base-file

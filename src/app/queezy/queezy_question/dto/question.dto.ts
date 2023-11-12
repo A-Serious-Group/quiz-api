@@ -34,4 +34,8 @@ export class Question {
      @ApiProperty({description: 'Esse question_id é o id de chave estrangeira da tabela question, que esta salva na tabela de resposta(answer) pra indentificar de qual pergunta é aquela resposta'})
      question_id: number
 
+     @ApiProperty({ description: 'Id do usuário, pra que seja listado todas perguntas desse usuário definido'})
+     @Type(() => Number)
+     id_user?: number
+
 }

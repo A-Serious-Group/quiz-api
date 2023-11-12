@@ -12,6 +12,7 @@ import {
   ParseFilePipe,
   MaxFileSizeValidator,
   FileTypeValidator,
+  Query,
 } from '@nestjs/common';
 import { QueezyQuestionService } from './queezy_question.service';
 import { Question } from './dto/question.dto';
@@ -46,8 +47,8 @@ export class QueezyQuestionController {
   }
 
   @Get('/api/question')
-  findAll() {
-    return this.queezyQuestionService.selectAllQuestion();
+  findAll(@Query() query: Question) {
+    return this.queezyQuestionService.selectAllQuestion(query);
   }
 
   @Put('/api/question/:id')
@@ -57,7 +58,7 @@ export class QueezyQuestionController {
 
   @Get('/api/question/:id')
   selectById(@Param('id') id_question: number) {
-    return this.queezyQuestionService.selectQuestionById(+id_question);
+    return this.queezyQuestionService.getQuestionWithAnswers(+id_question);
   }
 
   @Delete('/api/question/:id')
