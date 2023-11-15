@@ -11,6 +11,7 @@ model Questions {
   id_question      Int                @id @default(autoincrement())
   question         String             @db.VarChar(255)
   question_user_id Int
+  imagem           String?
   answer_fk        Answers[]
   question_answers Question_answers[]
   users            Users              @relation(fields: [question_user_id], references: [id_user])
@@ -28,8 +29,8 @@ model Question_answers {
 model Answers {
   id_answer        Int                @id @default(autoincrement())
   answers          String             @db.VarChar(255)
-  answers_correct  Boolean?           @default(false)
   question_id      Int
+  answers_correct  Boolean?           @default(false)
   question_fk      Questions          @relation(fields: [question_id], references: [id_question])
   question_answers Question_answers[]
 }
