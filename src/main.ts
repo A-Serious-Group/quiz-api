@@ -26,7 +26,12 @@ const config = new DocumentBuilder()
 const document = SwaggerModule.createDocument(app, config)
 SwaggerModule.setup('api', app, document)
 
-app.useGlobalPipes(new ValidationPipe())
+app.useGlobalPipes(new ValidationPipe(
+{
+    transform: true,
+}
+),
+)
 
 await app.listen(port)
 return {

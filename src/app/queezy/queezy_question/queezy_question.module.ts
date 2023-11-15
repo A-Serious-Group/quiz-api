@@ -4,6 +4,6 @@ import { QueezyQuestionController } from './queezy_question.controller';
 
 @Module({
   controllers: [QueezyQuestionController],
-  providers: [QueezyQuestionService],
+  providers: [QueezyQuestionService]
 })
 export class QueezyQuestionModule {}
