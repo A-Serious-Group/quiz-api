@@ -1,4 +1,6 @@
 import {
+  HttpException,
+  HttpStatus,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -8,6 +10,7 @@ import { UpdateQueezyUserDto } from './dto/update-queezy_user.dto';
 import { PrismaDbConfigService } from '../../../prisma/prisma-db-config/prisma-db-config.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { HttpExceptionFilter } from '../../exception-filter/exception-filter';
 
 @Injectable()
 export class QueezyUserService {
@@ -72,14 +75,31 @@ export class QueezyUserService {
 
   async findOne(id: number) {}
 
-  async update(id: number, updateQueezyUserDto: UpdateQueezyUserDto) {
+  async update(id: number, dados: UpdateQueezyUserDto) {
     try {
+      const usuarioExiste = await this.prismaDbService.users.findUnique({
+        where: {id_user: id}
+      })
+      if(usuarioExiste == null){
+        throw new  HttpException('Usuário não encontrado', HttpStatus.BAD_REQUEST)
+      }
+      const existeEmail = await this.prismaDbService.users.findFirst({
+        where: {email: dados.email}
+      })
+      if(existeEmail && +existeEmail.id_user != id ){
+        throw new HttpException('O email fornecido já é usado por um usuário cadastrado', HttpStatus.UNAUTHORIZED)
+      }
       const user = await this.prismaDbService.users.update({
-        data: updateQueezyUserDto,
+        data: {
+          name: dados.name,
+          email: dados.email,
+          password: await bcrypt.hash(dados.password, 10),
+          access_token: null
+        },
         where: { id_user: id },
         select: {name: true , email: true, id_user: true }
       });
-      return {mensagem: 'User update with success', user: user}
+      return {mensagem: 'Usuário atualizado com sucesso', user: user}
     } catch (error) {
       console.log(error)
       return error;

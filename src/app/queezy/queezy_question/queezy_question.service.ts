@@ -11,7 +11,7 @@ export class QueezyQuestionService {
     const question = await this.prismaDbService.questions.create({
       data: {
         question: dados.question,
-        question_user_id: dados.question_id_user,
+        question_user_id: +dados.question_id_user,
       },
     });
     const selectQuestion = await this.prismaDbService.questions.findFirst({
