@@ -3,7 +3,7 @@ import { QueezyGamesService } from './queezy_games.service';
 import { CreateQueezyGameDto } from './dto/create-queezy_game.dto';
 import { UpdateQueezyGameDto } from './dto/update-queezy_game.dto';
 
-@Controller('queezy-games')
+@Controller('queezy')
 export class QueezyGamesController {
   constructor(private readonly queezyGamesService: QueezyGamesService) {}
 
@@ -12,14 +12,16 @@ export class QueezyGamesController {
     return this.queezyGamesService.create(createQueezyGameDto);
   }
 
-  @Get()
+  @Get('/api/games')
   findAll() {
     return this.queezyGamesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.queezyGamesService.findOne(+id);
+  @Get('/api/get-id-user/:id_users')
+  findOne(@Param('id_users') ids: string) {
+    console.log('chamou controller')
+    const usersIds = ids.split(',').map(Number)
+    return this.queezyGamesService.getUsers(usersIds);
   }
 
   @Patch(':id')

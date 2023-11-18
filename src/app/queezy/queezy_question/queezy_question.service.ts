@@ -6,6 +6,7 @@ import * as fs from 'fs';
 
 @Injectable()
 export class QueezyQuestionService {
+  private games: { [userId: number]: { questions: Question[], currentQuestionIndex: number } } = {};
   constructor(private prismaDbService: PrismaDbConfigService) {}
 
   async createQuestion(
@@ -29,6 +30,7 @@ export class QueezyQuestionService {
           question: dados.question,
           question_user_id: +dados.question_id_user,
           imagem: file.path
+          
         },
       });
       const selectQuestion = await this.prismaDbService.questions.findFirst({
@@ -65,42 +67,65 @@ export class QueezyQuestionService {
   }
 
   public criarPerguntaSemImagem = async (dados: Question) => {
+  
     const existeUsuario = await this.prismaDbService.users.findFirst({
-      where: { id_user: +dados.question_id_user },
+      where: { id_user: +dados.id_user },
        })
+       
     if(existeUsuario == null){
       return  {mensagem:'Id do usuário informado não existe'}
      }
     const question = await this.prismaDbService.questions.create({
       data: {
         question: dados.question,
-        question_user_id: +dados.question_id_user,
+        question_user_id: +dados.id_user,
       },
     });
     const selectQuestion = await this.prismaDbService.questions.findFirst({
       where: { id_question: question.id_question },
     });
 
-    const answer = await this.prismaDbService.answers.create({
-      data: {
-        answers: dados.answer,
-        question_id: selectQuestion.id_question,
-        answers_correct: dados?.answers_correct,
+    const respostas = [
+      {
+        answer: 'Peixe', answers_correct: false
       },
-    });
-    await this.prismaDbService.question_answers.create({
-      data: {
-        question_id: selectQuestion.id_question,
-        answer_id: answer.id_answer,
-        position: dados.position,
+      {
+        answer: 'Dinossauro', answers_correct: false
       },
-    });
+      {
+        answer: 'Boi', answers_correct: true
+      },
+      {
+        answer: 'Barata', answers_correct: false
+      }
+    ]
+
+    for(let item of respostas){
+
+      const answer = await this.prismaDbService.answers.create({
+        data: {
+          answers: item.answer,
+          question_id: selectQuestion.id_question,
+          answers_correct: item.answers_correct,
+        },
+      });
+
+      await this.prismaDbService.question_answers.create({
+        data: {
+          question_id: selectQuestion.id_question,
+          answer_id: answer.id_answer,
+          position: dados.position,
+        },
+      });
+    }
+
+
 
     if (question) {
       return {
         status: 201,
         mensagem: 'Questão criada com sucesso',
-        data: question
+        data: {question, awnser: respostas}
       };
     } else {
       return { status: 400, mensagem: 'Error creating a question' };
@@ -123,6 +148,14 @@ export class QueezyQuestionService {
       data: dados,
     });
     return { question: question };
+  }
+
+  async selectQuestionByUserId(id_user: number){
+    return this.prismaDbService.questions.findMany({
+      where: { question_user_id: id_user},
+      include: { answer_fk: true },
+
+    })
   }
 
   async selectQuestionById(id: number) {
@@ -169,4 +202,111 @@ export class QueezyQuestionService {
     });
     console.log(question, 'question')
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  async startGame(userId: number, chosenUserId: number) {
+    const questions = await this.selectQuestionByUserId(chosenUserId);
+    return this.games[userId] = { questions: this.shuffleArray(questions).slice(0, 10), currentQuestionIndex: 0 };
+  }
+
+  getCurrentQuestion(userId: number) {
+    console.log(userId, 'userId')
+    if (!this.games[userId]) {
+      throw new Error('Game not started for this user');
+    }
+    console.log(this.games[userId].questions[this.games[userId].currentQuestionIndex], 'getCuurentQuestion')
+    return this.games[userId].questions[this.games[userId].currentQuestionIndex];
+  }
+
+  async answerQuestion(userId: number, answerId: number) {
+    console.log(userId, 'userId awasers')
+    // const currentQuestion = this.getCurrentQuestion(userId);
+    const answer = await this.prismaDbService.answers.findFirst({
+      where: { id_answer: answerId },
+    });
+    console.log(answer, 'answer')
+    // if (answer.question_id !== currentQuestion.id_question) {
+    //   throw new Error('Answer does not belong to the current question');
+    // }
+
+    if (answer.answers_correct) {
+      this.games[userId].currentQuestionIndex++;
+      return true;
+    } else {
+      this.games[userId].currentQuestionIndex = 0;
+      return false;
+    }
+  }
+
+  private shuffleArray(array: any[]) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+  
+
+  
 }
