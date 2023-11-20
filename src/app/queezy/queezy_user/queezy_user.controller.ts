@@ -23,8 +23,8 @@ export class QueezyUserController {
   }
 
   @ApiOperation({summary: 'Alterar usuário por id', description: "Altera o usuário pelo id fornecido"})
-  @Patch('/api/queezy/user/:id')
-  update(@Param('id') id: string, @Body() updateQueezyUserDto: UpdateQueezyUserDto) {
+  @Patch('/api/queezy/user/:id_user')
+  update(@Param('id_user') id: string, @Body() updateQueezyUserDto: UpdateQueezyUserDto) {
     return this.queezyUserService.update(+id, updateQueezyUserDto);
   }
 

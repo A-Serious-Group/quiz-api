@@ -75,6 +75,16 @@ export class QueezyQuestionService {
     if(existeUsuario == null){
       return  {mensagem:'Id do usuário informado não existe'}
      }
+
+   // DEIXEI COMENTADO ESSA FUNÇÃO DE CRIAR O GAME
+    // await this.prismaDbService.games.create({
+    //   data: {
+    //     name: dados.name,
+    //     url: 'www.teste.com.br',
+    //     user_id: +dados.id_user,
+    //   }
+    //  })
+
     const question = await this.prismaDbService.questions.create({
       data: {
         question: dados.question,
@@ -85,22 +95,9 @@ export class QueezyQuestionService {
       where: { id_question: question.id_question },
     });
 
-    const respostas = [
-      {
-        answer: 'resposta 1', answers_correct: false
-      },
-      {
-        answer: 'resposta 2', answers_correct: false
-      },
-      {
-        answer: 'resposta 3', answers_correct: false
-      },
-      {
-        answer: 'resposta 4', answers_correct: true
-      }
-    ]
+    const answers = dados.answers
 
-    for(let item of respostas){
+    for(let item of answers){
 
       const answer = await this.prismaDbService.answers.create({
         data: {
@@ -114,7 +111,7 @@ export class QueezyQuestionService {
         data: {
           question_id: selectQuestion.id_question,
           answer_id: answer.id_answer,
-          position: dados.position,
+          position: '',
         },
       });
     }
@@ -125,7 +122,7 @@ export class QueezyQuestionService {
       return {
         status: 201,
         mensagem: 'Questão criada com sucesso',
-        data: {question, awnser: respostas}
+        data: {question, awnser: answers}
       };
     } else {
       return { status: 400, mensagem: 'Error creating a question' };
@@ -208,7 +205,6 @@ export class QueezyQuestionService {
     const answer = await this.prismaDbService.answers.findUnique({
        where: {id_answer: id_answer, question_id: question_id}
     })
-    console.log(answer, 'answer')
     if(answer){
       return {isCorrect: answer.answers_correct}
     }else{
@@ -284,21 +280,17 @@ export class QueezyQuestionService {
   }
 
   getCurrentQuestion(userId: number) {
-    console.log(userId, 'userId')
     if (!this.games[userId]) {
       throw new Error('Game not started for this user');
     }
-    console.log(this.games[userId].questions[this.games[userId].currentQuestionIndex], 'getCuurentQuestion')
     return this.games[userId].questions[this.games[userId].currentQuestionIndex];
   }
 
   async answerQuestion(userId: number, answerId: number) {
-    console.log(userId, 'userId awasers')
     // const currentQuestion = this.getCurrentQuestion(userId);
     const answer = await this.prismaDbService.answers.findFirst({
       where: { id_answer: answerId },
     });
-    console.log(answer, 'answer')
     // if (answer.question_id !== currentQuestion.id_question) {
     //   throw new Error('Answer does not belong to the current question');
     // }

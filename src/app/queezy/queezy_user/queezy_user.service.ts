@@ -75,11 +75,11 @@ export class QueezyUserService {
   async update(id: number, updateQueezyUserDto: UpdateQueezyUserDto) {
     try {
       const user = await this.prismaDbService.users.update({
-        data: updateQueezyUserDto,
+        data: {email: updateQueezyUserDto.email, name: updateQueezyUserDto.name, password: bcrypt.hashSync(updateQueezyUserDto.password, 10)},
         where: { id_user: id },
         select: {name: true , email: true, id_user: true }
       });
-      return {mensagem: 'User update with success', user: user}
+      return {mensagem: 'Usuário atualizado com sucesso!', user: user}
     } catch (error) {
       console.log(error)
       return error;

@@ -35,4 +35,19 @@ export class Question {
      @Type(() => Number)
      id_user?: number
 
+     @ApiProperty({description: 'Respostas que precisa chegar como a array com as respostas e com answers_correct informando qual a correta'})
+    @Type(() => Answers)
+    answers: Answers[];
+
+    @ApiProperty({description: 'Esse campo name precisa ser mandado porque ele vai ser o nome do game que o usuário vai criar'})
+    name: string
+}
+
+export class Answers {
+
+    answer: string;
+    
+    @Type(() => Boolean)
+    answers_correct: boolean;
+    
 }

@@ -19,7 +19,6 @@ export class QueezyGamesController {
 
   @Get('/api/get-id-user/:id_users')
   findOne(@Param('id_users') ids: string) {
-    console.log('chamou controller')
     const usersIds = ids.split(',').map(Number)
     return this.queezyGamesService.getUsers(usersIds);
   }
