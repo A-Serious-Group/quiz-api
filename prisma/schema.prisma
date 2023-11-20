@@ -22,8 +22,10 @@ model Question_answers {
   question_id         Int
   answer_id           Int
   position            String    @db.VarChar(255)
+  game_id             Int      
   answers             Answers   @relation(fields: [answer_id], references: [id_answer])
   question            Questions @relation(fields: [question_id], references: [id_question])
+  game               Games    @relation(fields: [game_id], references: [id_game])
 }
 
 model Answers {
@@ -61,6 +63,7 @@ model Games {
   user_id        Int
   restartOnError Boolean?
   users          Users    @relation(fields: [user_id], references: [id_user])
+  question_answers Question_answers[]
 }
 
 model Redefination_password {

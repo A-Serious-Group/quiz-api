@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { QueezyGamesService } from './queezy_games.service';
 import { CreateQueezyGameDto } from './dto/create-queezy_game.dto';
 import { UpdateQueezyGameDto } from './dto/update-queezy_game.dto';
@@ -21,6 +21,19 @@ export class QueezyGamesController {
   findOne(@Param('id') id: string) {
     return this.queezyGamesService.findOne(+id);
   }
+
+  @Get(':user_id')
+  findByUserId(@Param('id') id: string) {
+    return this.queezyGamesService.findOne(+id);
+  }
+
+  // @Get('by-user')
+  // async findByUserId(@Param('user_id') user_id: string): Promise<any> {
+    
+
+  //   console.log("CHEGAMOS");
+  //   // return this.queezyGamesService.findByUserId(userIdAsNumber);
+  // }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateQueezyGameDto: UpdateQueezyGameDto) {
