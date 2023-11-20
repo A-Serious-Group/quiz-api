@@ -14,7 +14,6 @@ export class QueezyGamesService {
 
   async findAll() {
     const games = await this.prismaDbService.games.findMany();
-    console.log(games, 'games')
     return {games}
   }
 

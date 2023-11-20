@@ -66,13 +66,16 @@ export class QueezyQuestionController {
     return this.queezyQuestionService.deleteQuestion(+id_question);
   }
 
-  @Get('/api/question/user/:id')
+  @Get('/api/question/user/:id_user')
   selectQuestionsByUser(@Param('id_user') id_user: number) {
-    console.log(id_user)
     return this.queezyQuestionService.selectQuestionByUserId(+id_user);
   }
   
 
+  @Get('/api/check-question/:id_answer/:question_id')
+  checkAnswer(@Param('id_answer')  id_answer: number, @Param('question_id') queston_id: number){
+    return this.queezyQuestionService.checkAnswer(+id_answer, +queston_id)
+  }
 
 
 
@@ -120,7 +123,6 @@ export class QueezyQuestionController {
   @Post('/api/answer-question/:id_user/:id_answer')
   async answerQuestion(@Param('id_user') userId: number, @Param('id_answer') answerId: number) {
     const isCorrect = await this.queezyQuestionService.answerQuestion(+userId, +answerId);
-    console.log(isCorrect, 'isCorrect controller')
     return { isCorrect };
   }
 }

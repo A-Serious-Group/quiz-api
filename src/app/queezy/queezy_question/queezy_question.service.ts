@@ -87,16 +87,16 @@ export class QueezyQuestionService {
 
     const respostas = [
       {
-        answer: 'Peixe', answers_correct: false
+        answer: 'resposta 1', answers_correct: false
       },
       {
-        answer: 'Dinossauro', answers_correct: false
+        answer: 'resposta 2', answers_correct: false
       },
       {
-        answer: 'Boi', answers_correct: true
+        answer: 'resposta 3', answers_correct: false
       },
       {
-        answer: 'Barata', answers_correct: false
+        answer: 'resposta 4', answers_correct: true
       }
     ]
 
@@ -151,11 +151,13 @@ export class QueezyQuestionService {
   }
 
   async selectQuestionByUserId(id_user: number){
-    return this.prismaDbService.questions.findMany({
+    const userQuestion = await this.prismaDbService.questions.findMany({
       where: { question_user_id: id_user},
       include: { answer_fk: true },
 
     })
+
+    return {mensagem: 'Lista de perguntas e respostas listado com sucesso', userQuestion}
   }
 
   async selectQuestionById(id: number) {
@@ -200,7 +202,18 @@ export class QueezyQuestionService {
       where: { id_question: questionId },
       include: { answer_fk: true },
     });
-    console.log(question, 'question')
+  }
+
+  async checkAnswer(id_answer: number, question_id: number ){
+    const answer = await this.prismaDbService.answers.findUnique({
+       where: {id_answer: id_answer, question_id: question_id}
+    })
+    console.log(answer, 'answer')
+    if(answer){
+      return {isCorrect: answer.answers_correct}
+    }else{
+      throw new Error("Resposta não encontrada")
+    }
   }
 
 
@@ -266,8 +279,8 @@ export class QueezyQuestionService {
 
 
   async startGame(userId: number, chosenUserId: number) {
-    const questions = await this.selectQuestionByUserId(chosenUserId);
-    return this.games[userId] = { questions: this.shuffleArray(questions).slice(0, 10), currentQuestionIndex: 0 };
+    // const questions = await this.selectQuestionByUserId(chosenUserId);
+    // return this.games[userId] = { questions: this.shuffleArray(questions).slice(0, 10), currentQuestionIndex: 0 };
   }
 
   getCurrentQuestion(userId: number) {
