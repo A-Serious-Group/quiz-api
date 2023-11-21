@@ -28,7 +28,7 @@ export class QueezyGamesController {
     return this.queezyGamesService.update(+id, updateQueezyGameDto);
   }
 
-  @Delete(':id')
+  @Delete('/api/game/:id')
   remove(@Param('id') id: string) {
     return this.queezyGamesService.remove(+id);
   }

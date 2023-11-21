@@ -29,8 +29,8 @@ export class QueezyQuestionService {
         data: {
           question: dados.question,
           question_user_id: +dados.question_id_user,
-          imagem: file.path
-          
+          imagem: file.path,
+          game_id: dados.game_id    
         },
       });
       const selectQuestion = await this.prismaDbService.questions.findFirst({
@@ -72,7 +72,7 @@ export class QueezyQuestionService {
       where: { id_user: +dados.id_user },
        })
        
-    if(existeUsuario == null){
+    if(!existeUsuario){
       return  {mensagem:'Id do usuário informado não existe'}
      }
 
@@ -89,6 +89,7 @@ export class QueezyQuestionService {
       data: {
         question: dados.question,
         question_user_id: +dados.id_user,
+        game_id: dados.game_id
       },
     });
     const selectQuestion = await this.prismaDbService.questions.findFirst({
@@ -115,8 +116,6 @@ export class QueezyQuestionService {
         },
       });
     }
-
-
 
     if (question) {
       return {
@@ -211,68 +210,6 @@ export class QueezyQuestionService {
       throw new Error("Resposta não encontrada")
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   async startGame(userId: number, chosenUserId: number) {
     // const questions = await this.selectQuestionByUserId(chosenUserId);

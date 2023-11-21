@@ -32,8 +32,56 @@ export class QueezyGamesService {
     return `This action updates a #${id} queezyGame`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} queezyGame`;
+  async remove(id: number) {
+    try {
+
+      const questionsToDelete = await this.prismaDbService.questions.findMany({
+        where: {
+          game_id: id,
+        },
+      });
+
+      await Promise.all(
+        questionsToDelete.map(async (question) => {
+          const answersToDelete = await this.prismaDbService.answers.findMany({
+            where: {
+              question_id: question.id_question,
+            },
+          });
+          
+
+          await Promise.all(
+            answersToDelete.map(async (answer) => {
+              await this.prismaDbService.answers.delete({
+                where: {
+                  id_answer: answer.id_answer,
+                },
+              });
+            })
+          );
+
+          await this.prismaDbService.questions.delete({
+            where: {
+              id_question: question.id_question,
+            },
+          });
+        })
+      );
+
+      const deletedQueezyGame = await this.prismaDbService.games.delete({
+        where: {
+          id_game: id,
+        },
+      });
+  
+      if (deletedQueezyGame) {
+        return `Successfully removed queezyGame with ID ${id}`;
+      } else {
+        return `QueezyGame with ID ${id} not found`;
+      }
+    } catch (error) {
+        throw error;
+    }
   }
 }
 

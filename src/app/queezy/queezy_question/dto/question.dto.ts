@@ -30,6 +30,7 @@ export class Question {
     @Type(() => Boolean)
      answers_correct: boolean
      question_id: number
+     game_id: number
 
      @ApiProperty({ description: 'Id do usuário, pra que seja listado todas perguntas desse usuário definido'})
      @Type(() => Number)
