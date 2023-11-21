@@ -13,8 +13,13 @@ export class QueezyGamesService {
   }
 
   async findAll() {
-    const games = await this.prismaDbService.games.findMany();
-    return {games}
+    const games = await this.prismaDbService.games.findMany({
+      include: {
+        users: true,
+      },
+    });
+  
+    return { games };
   }
 
   async getUsers(userIds: number[]) {
