@@ -17,6 +17,11 @@ export class QueezyGamesController {
     return this.queezyGamesService.findAll();
   }
 
+  @Get('/api/game/one/:id')
+  findById(@Param('id') id: number) {
+    return this.queezyGamesService.getById(id);
+  }
+
   @Get('/api/get-id-user/:id_users')
   findOne(@Param('id_users') ids: string) {
     const usersIds = ids.split(',').map(Number)

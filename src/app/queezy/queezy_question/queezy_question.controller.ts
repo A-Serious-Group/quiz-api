@@ -61,6 +61,11 @@ export class QueezyQuestionController {
     return this.queezyQuestionService.getQuestionWithAnswers(+id_question);
   }
 
+  @Get('/api/question-game/:id')
+  selectByGameId(@Param('id') id: number) {
+    return this.queezyQuestionService.getByGameId(id);
+  }
+
   @Delete('/api/question/:id')
   delete(@Param('id') id_question: number) {
     return this.queezyQuestionService.deleteQuestion(+id_question);

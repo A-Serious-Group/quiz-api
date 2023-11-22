@@ -200,6 +200,16 @@ export class QueezyQuestionService {
     });
   }
 
+  async getByGameId(id: number){
+    const question = await this.prismaDbService.questions.findMany({
+      where: { game_id: id },
+      include: {
+        answer_fk: true
+      }
+    });
+    return question
+  }
+
   async checkAnswer(id_answer: number, question_id: number ){
     const answer = await this.prismaDbService.answers.findUnique({
        where: {id_answer: id_answer, question_id: question_id}

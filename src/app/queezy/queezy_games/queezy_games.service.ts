@@ -33,6 +33,13 @@ export class QueezyGamesService {
     return {users}
   }
 
+  async getById(id: number) {
+    const game = await this.prismaDbService.games.findUnique({
+      where: { id_game: id },
+    });
+    return { game }
+  }
+
   update(id: number, updateQueezyGameDto: UpdateQueezyGameDto) {
     return `This action updates a #${id} queezyGame`;
   }
