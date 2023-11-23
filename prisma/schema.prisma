@@ -11,10 +11,12 @@ model Questions {
   id_question      Int                @id @default(autoincrement())
   question         String             @db.VarChar(255)
   question_user_id Int
+  game_id          Int
   imagem           String?
   answer_fk        Answers[]
   question_answers Question_answers[]
   users            Users              @relation(fields: [question_user_id], references: [id_user])
+  games               Games @relation(fields: [game_id], references: [id_game])
 }
 
 model Question_answers {
@@ -61,6 +63,7 @@ model Games {
   user_id        Int
   restartOnError Boolean?
   users          Users    @relation(fields: [user_id], references: [id_user])
+  question      Questions[]
 }
 
 model Redefination_password {
