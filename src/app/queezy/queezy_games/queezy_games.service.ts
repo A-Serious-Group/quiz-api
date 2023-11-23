@@ -16,6 +16,7 @@ export class QueezyGamesService {
     const games = await this.prismaDbService.games.findMany({
       include: {
         users: true,
+        question: true
       },
     });
   
