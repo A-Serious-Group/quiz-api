@@ -20,7 +20,7 @@ export class QueezyQuestionAnswerService {
     data.question.forEach(async element => {
       const question = await this.prismaDbService.questions.create({
         data: {
-          question: element.title,
+          question: element.question,
           question_user_id: data.user_id,
           game_id: game.id_game
         },
