@@ -5,6 +5,7 @@ _kill_procs() {
 }
 npm install
 
+echo "Install Dependencies"
 npx prisma generate
 
 # npx prisma db push
