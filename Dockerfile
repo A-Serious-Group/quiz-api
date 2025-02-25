@@ -1,4 +1,4 @@
-FROM node:18.17.1
+FROM node:18.18.2
 
 RUN apt-get update && apt-get install -y procps && rm -rf /var/lib/apt/lists/*
 
