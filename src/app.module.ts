@@ -21,7 +21,7 @@ import { AuthModule } from './app/auth/auth.module';
     ],
     providers: [
         AppService,
-        QueezyService
+        QueezyService,
     ]
 })
 export class AppModule {}

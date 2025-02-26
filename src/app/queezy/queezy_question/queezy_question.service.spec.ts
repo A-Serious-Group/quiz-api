@@ -1,18 +1,31 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { QueezyQuestionService } from './queezy_question.service';
+import { PrismaDbConfigService } from '../../../prisma/prisma-db-config/prisma-db-config.service'; // Import the PrismaDbConfigService
 
 describe('QueezyQuestionService', () => {
-  let service: QueezyQuestionService;
+  describe('QueezyQuestionService', () => {
+    let service: QueezyQuestionService;
+  
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [QueezyQuestionService],
-    }).compile();
+    beforeEach(() => {
+      const prismaDbService = new PrismaDbConfigService(); // Use the PrismaDbConfigService as the argument
+      service = new QueezyQuestionService(prismaDbService);
+    });
+  
+    it('should answer a question for a user', async () => {
+      const userId = 1;
+      const answerId = 21;
+      const chosenUserId = 1; // Provide the missing argument
 
-    service = module.get<QueezyQuestionService>(QueezyQuestionService);
-  });
+      // Initialize the game for the user
+      const startgame = await service.startGame(userId, chosenUserId);
+      console.log(startgame, 'startgame')
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+      // Now you can call answerQuestion without getting an undefined error
+      const result = await service.answerQuestion(userId, answerId);
+      console.log(result, 'result')
+
+      expect(result).toBeDefined();
+    });
   });
 });

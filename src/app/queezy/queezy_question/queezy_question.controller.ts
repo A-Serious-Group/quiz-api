@@ -61,32 +61,73 @@ export class QueezyQuestionController {
     return this.queezyQuestionService.getQuestionWithAnswers(+id_question);
   }
 
+  @Get('/api/question-game/:id')
+  selectByGameId(@Param('id') id: number) {
+    return this.queezyQuestionService.getByGameId(id);
+  }
+
   @Delete('/api/question/:id')
   delete(@Param('id') id_question: number) {
     return this.queezyQuestionService.deleteQuestion(+id_question);
   }
-// Esse controller eu comentei porque foi outro teste que fiz mandando o arquivo sozinho, mas o certo é o primeiro la
-  // @Post('/api/question/upload')
-  // @UseInterceptors(
-  //   FileInterceptor('file', {
-  //     storage: diskStorage({
-  //       destination: '../../uploads',
-  //     }),
-  //   }),
-  // )
-  // uploadImage(
-  //   @UploadedFile(
-  //     new ParseFilePipe({
-  //       validators: [
-  //         new MaxFileSizeValidator({ maxSize: 999896 }),
-  //         // new FileTypeValidator({fileType: 'image/jpg'})
-  //       ],
-  //     }),
-  //   )
-  //   file: Express.Multer.File,
-  // ) {
-  //   console.log(file, 'file');
 
-  //   return;
-  // }
+  @Get('/api/question/user/:id_user')
+  selectQuestionsByUser(@Param('id_user') id_user: number) {
+    return this.queezyQuestionService.selectQuestionByUserId(+id_user);
+  }
+  
+
+  @Get('/api/check-question/:id_answer/:question_id')
+  checkAnswer(@Param('id_answer')  id_answer: number, @Param('question_id') queston_id: number){
+    return this.queezyQuestionService.checkAnswer(+id_answer, +queston_id)
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  @Post('/api/start-game/:id_user/:id_user_game')
+  async startGame(@Param('id_user') userId: number, @Param('id_user_game') chosenUserId: number) {
+   return  await this.queezyQuestionService.startGame(userId, chosenUserId);
+  }
+
+  @Get(':userId/current-question')
+  async getCurrentQuestion(@Param('userId') userId: number) {
+    const question = this.queezyQuestionService.getCurrentQuestion(userId);
+    return { question };
+  }
+
+  @Post('/api/answer-question/:id_user/:id_answer')
+  async answerQuestion(@Param('id_user') userId: number, @Param('id_answer') answerId: number) {
+    const isCorrect = await this.queezyQuestionService.answerQuestion(+userId, +answerId);
+    return { isCorrect };
+  }
 }
