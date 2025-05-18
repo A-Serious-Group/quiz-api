@@ -8,12 +8,15 @@ const { Module } = require("@nestjs/common");
 import { ConfigModule } from '@nestjs/config'
 import { PrismaModule } from "./prisma/prisma.module";
 import { AuthModule } from './app/auth/auth.module';
+import { CloudinaryService } from "./app/upload/cloudinary.service";
+import { UploadModule } from "./app/upload/upload.module";
 @Module({
     imports: [
         QueezyModule,
         PrismaModule,
         ConfigModule.forRoot(),
         AuthModule,
+        UploadModule,
     ],
     controllers: [
         AppController,

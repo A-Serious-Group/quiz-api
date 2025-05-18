@@ -12,8 +12,8 @@ async function bootstrap() {
 const app = await NestFactory.create(AppModule, {
     abortOnError: false, 
     cors: {
-        origin: '*',
-        methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
+        origin: process.env.QUEEZY_URL_FRONT,
+        credentials: true
     },
 })
 const config = new DocumentBuilder()

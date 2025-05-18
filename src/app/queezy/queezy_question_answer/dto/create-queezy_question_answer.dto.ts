@@ -3,6 +3,7 @@ export class CreateQueezyQuestionAnswerDto {
     question: {
       forEach(arg0: (element: any) => Promise<void>): unknown;
       title: string;
+      imagem: string;
       answers: Array<{
         name: string;
         correct: boolean;
