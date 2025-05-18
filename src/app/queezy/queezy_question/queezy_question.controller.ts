@@ -25,23 +25,27 @@ import { diskStorage } from 'multer';
 export class QueezyQuestionController {
   constructor(private readonly queezyQuestionService: QueezyQuestionService) {}
 
-  @Post('/api/question')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: (req, file, cb) => {
-          cb(null, '../../uploads');
-        },
-        filename: (req, file, cb) => {
-          const randomName = Array(32)
-            .fill(null)
-            .map(() => Math.round(Math.random() * 16).toString(16))
-            .join('');
-          return cb(null, `${randomName}${file.originalname}`);
-        },
-      }),
-    }),
-  )
+  // @Post('/api/question/upload-file')
+  // @UseInterceptors(FileInterceptor('file', {storage: diskStorage({destination: (req, file, cb) => {
+  //         cb(null, '../../uploads');
+  //       },
+  //       filename: (req, file, cb) => {
+  //         const randomName = Array(32)
+  //           .fill(null)
+  //           .map(() => Math.round(Math.random() * 16).toString(16))
+  //           .join('');
+  //         return cb(null, `${randomName}${file.originalname}`);
+  //       },
+  //     }),
+  //   }),
+  // )
+
+  @Post('/api/upload-file/question')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    return 'OK';
+  }
+
   create(@Body() dados: Question, @UploadedFile() file: Express.Multer.File) {
     return this.queezyQuestionService.createQuestion(dados, file);
   }
