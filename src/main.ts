@@ -12,7 +12,7 @@ async function bootstrap() {
 const app = await NestFactory.create(AppModule, {
     abortOnError: false, 
     cors: {
-        origin: process.env.QUEEZY_URL_FRONT,
+        origin: process.env.LOCAL_HOST_APP,
         credentials: true
     },
 })
