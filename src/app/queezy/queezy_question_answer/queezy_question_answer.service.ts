@@ -23,7 +23,7 @@ export class QueezyQuestionAnswerService {
           question: element.question,
           question_user_id: data.user_id,
           game_id: game.id_game,
-          imagem: element.imagem
+          imagem: element.image
         },
       });
       for (let index = 0; index < element.answers.length; index++) {

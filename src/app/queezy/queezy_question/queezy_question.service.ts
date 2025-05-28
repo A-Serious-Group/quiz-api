@@ -259,9 +259,4 @@ export class QueezyQuestionService {
      const response = this.cloudinaryService.uploadImage(file);
      return response;
   }
-
-  
-  
-
-  
 }
