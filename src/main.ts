@@ -12,8 +12,8 @@ async function bootstrap() {
 const app = await NestFactory.create(AppModule, {
     abortOnError: false, 
     cors: {
-        origin: '*',
-        methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
+        origin: process.env.LOCAL_HOST_APP,
+        credentials: true
     },
 })
 const config = new DocumentBuilder()

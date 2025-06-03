@@ -3,11 +3,15 @@ import { PrismaDbConfigService } from '../../../prisma/prisma-db-config/prisma-d
 import { Question } from './dto/question.dto';
 import { join } from 'path';
 import * as fs from 'fs';
+import { CloudinaryService } from '../../upload/cloudinary.service';
 
 @Injectable()
 export class QueezyQuestionService {
   private games: { [userId: number]: { questions: Question[], currentQuestionIndex: number } } = {};
-  constructor(private prismaDbService: PrismaDbConfigService) {}
+  constructor(
+    private prismaDbService: PrismaDbConfigService,
+    private cloudinaryService: CloudinaryService,
+  ) {}
 
   async createQuestion(
     dados: Question,
@@ -183,15 +187,7 @@ export class QueezyQuestionService {
     }
   }
 
-  async uploadImage(@UploadedFile() file: Express.Multer.File) {
-    const imagePath = join(__dirname, '..', 'uploads', file.filename);
-
-    // Aqui você pode salvar o caminho da imagem (imagePath) no seu banco de dados PostgreSQL
-    // Supondo que você tenha um serviço para isso, poderia ser algo como:
-    // const imageRecord = await this.prismaDbService.questions.create({ path: imagePath });
-
-    return; //imageRecord;
-  }
+  
 
   async getQuestionWithAnswers(questionId: number){
     const question = await this.prismaDbService.questions.findUnique({
@@ -258,7 +254,9 @@ export class QueezyQuestionService {
     }
     return array;
   }
-  
 
-  
+  async uploadFile(file: Express.Multer.File): Promise<string> {
+     const response = this.cloudinaryService.uploadImage(file);
+     return response;
+  }
 }

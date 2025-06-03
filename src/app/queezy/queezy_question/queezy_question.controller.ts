@@ -19,29 +19,21 @@ import { Question } from './dto/question.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { CloudinaryService } from '../../upload/cloudinary.service';
 
 @ApiTags('Questions')
 @Controller('queezy')
 export class QueezyQuestionController {
   constructor(private readonly queezyQuestionService: QueezyQuestionService) {}
 
-  @Post('/api/question')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: (req, file, cb) => {
-          cb(null, '../../uploads');
-        },
-        filename: (req, file, cb) => {
-          const randomName = Array(32)
-            .fill(null)
-            .map(() => Math.round(Math.random() * 16).toString(16))
-            .join('');
-          return cb(null, `${randomName}${file.originalname}`);
-        },
-      }),
-    }),
-  )
+
+  @Post('/api/upload-file/question')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(@UploadedFile() file: Express.Multer.File): Promise<{ url: string }> {
+  const url = await this.queezyQuestionService.uploadFile(file);
+  return { url };
+  }
+
   create(@Body() dados: Question, @UploadedFile() file: Express.Multer.File) {
     return this.queezyQuestionService.createQuestion(dados, file);
   }
