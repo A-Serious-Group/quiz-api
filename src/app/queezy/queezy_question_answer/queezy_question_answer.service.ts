@@ -48,8 +48,117 @@ export class QueezyQuestionAnswerService {
     return `This action returns a #${id} queezyQuestionAnswer`;
   }
 
-  update(id: number, updateQueezyQuestionAnswerDto: UpdateQueezyQuestionAnswerDto) {
-    return `This action updates a #${id} queezyQuestionAnswer`;
+  async update(id: number, updateQueezyQuestionAnswerDto: UpdateQueezyQuestionAnswerDto) {
+    // Update game if game_name or restartOnError is provided
+    if (updateQueezyQuestionAnswerDto.game_name || updateQueezyQuestionAnswerDto.restartOnError) {
+      await this.prismaDbService.games.update({
+        where: { id_game: id },
+        data: {
+          name: updateQueezyQuestionAnswerDto.game_name,
+          restartOnError: updateQueezyQuestionAnswerDto.restartOnError,
+        },
+      });
+    }
+
+    // Update questions and answers if provided
+    if (updateQueezyQuestionAnswerDto.question) {
+      // Get all existing questions for this game
+      const existingQuestions = await this.prismaDbService.questions.findMany({
+        where: { game_id: id },
+        select: { id_question: true }
+      });
+
+      // Get IDs of questions in the update request
+      const updatedQuestionIds = updateQueezyQuestionAnswerDto.question
+        .filter(q => q.id_question)
+        .map(q => q.id_question);
+
+      // Find questions to delete (exist in DB but not in request)
+      const questionsToDelete = existingQuestions
+        .filter(q => !updatedQuestionIds.includes(q.id_question))
+        .map(q => q.id_question);
+
+      // Delete questions that are no longer in the request
+      if (questionsToDelete.length > 0) {
+        // First delete all answers for these questions
+        await this.prismaDbService.answers.deleteMany({
+          where: {
+            question_id: {
+              in: questionsToDelete
+            }
+          }
+        });
+
+        // Then delete the questions
+        await this.prismaDbService.questions.deleteMany({
+          where: {
+            id_question: {
+              in: questionsToDelete
+            }
+          }
+        });
+      }
+
+      // Process the questions in the request
+      for (const element of updateQueezyQuestionAnswerDto.question) {
+        let question;
+        
+        if (element.id_question) {
+          // Update existing question
+          question = await this.prismaDbService.questions.update({
+            where: {
+              id_question: element.id_question,
+            },
+            data: {
+              question: element.question,
+              imagem: element.imagem,
+            },
+          });
+        } else {
+          // Create new question
+          question = await this.prismaDbService.questions.create({
+            data: {
+              question: element.question,
+              question_user_id: element.question_user_id || 1,
+              game_id: id,
+              imagem: element.image || element.imagem || null
+            },
+          });
+        }
+
+        // Handle answers
+        if (element.answer_fk) {
+          // Delete existing answers for this question
+          await this.prismaDbService.answers.deleteMany({
+            where: { question_id: question.id_question },
+          });
+
+          // Create new answers
+          for (const answer of element.answer_fk) {
+            await this.prismaDbService.answers.create({
+              data: {
+                answers: answer.answers,
+                question_id: question.id_question,
+                answers_correct: answer.answers_correct,
+              },
+            });
+          }
+        } else if (element.answers) {
+          // Create new answers for new question
+          for (const answer of element.answers) {
+            await this.prismaDbService.answers.create({
+              data: {
+                answers: answer.name,
+                question_id: question.id_question,
+                answers_correct: answer.correct,
+              },
+            });
+          }
+        }
+      }
+    }
+
+    return "Game, Questions and Answers updated successfully";
   }
 
   remove(id: number) {
