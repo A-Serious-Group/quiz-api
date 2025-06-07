@@ -12,7 +12,7 @@ no MAC não sei como funciona, ai joga no GPT e marcha.
 
 5 - acesse o linear e pegue as variaveis de ambiente https://linear.app/login, coloque sem email e vai chegar um codigo nele, coloque e você irá entrar na org na task QUI-42 vai estar la no comentario.
 
-6 - Depois se voce tiver o docker rode o comando no terminal docker pull postgres espere baixar a imagem, logo após baixar, rode o comando no mesmo terminal, docker run -d --name queezy_postgres -e POSTGRES_USER=quezy -e POSTGRES_PASSWORD=quezy -e POSTGRES_DB=postgres -p 5472:5432 postgres
+6 - Depois se voce tiver o docker rode o comando no terminal -> docker pull postgres <-, espere baixar a imagem, logo após baixar, rode o comando no mesmo terminal, -> docker run -d --name queezy_postgres -e POSTGRES_USER=quezy -e POSTGRES_PASSWORD=quezy -e POSTGRES_DB=postgres -p 5472:5432 postgres <-
 
 7 - Verifique se esta rodando com o comando docker ps, tem que aparecer algo como: 
 
